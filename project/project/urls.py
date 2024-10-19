@@ -23,11 +23,10 @@ from app.views import *
 
 router=DefaultRouter()
 router.register(r'files',FileViewSet,basename='file')
+router.register(r'users',UserViewSet,basename='user')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/users/register/',register_user,name='register_user'),
-    path('api/users/login/',login_user,name='login_user'),
     path('api/',include(router.urls)),
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
