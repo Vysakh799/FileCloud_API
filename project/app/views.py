@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from .models import Files
 from .serializers import *
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class UserViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
@@ -24,7 +24,7 @@ class UserViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
-            user = authenticate(usernam=username,password=password)
+            user = authenticate(username=username,password=password)
             if user is not None:
                 refresh =RefreshToken.for_user(user)
                 return Response({
@@ -34,12 +34,21 @@ class UserViewSet(viewsets.ViewSet):
                 })
             return Response({'error':'Invlaid credentials'},status=status.HTTP_401_UNAUTHORIZED)
         return Response({'error' : serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        user = request.user
+        print(user)
+        return Response({
+            'username': user.username,
+            'email': user.email,
+        })
 
 class FileViewSet(viewsets.ModelViewSet):
     queryset = Files.objects.all()
     serializer_class =FileSerializer
     permission_classes=[IsAuthenticated]
-
+    parser_classes = [MultiPartParser, FormParser]  # Handle file uploads
     def get_queryset(self):
         return Files.objects.filter(user=self.request.user)
     
@@ -47,3 +56,15 @@ class FileViewSet(viewsets.ModelViewSet):
         return serializer.save(user=self.request.user)
     
 
+# User:
+
+#     POST /api/users/register/
+#     POST /api/users/login/
+
+# File-related endpoints:
+
+#     GET /api/files/
+#     POST /api/files/
+#     GET /api/files/<id>/
+#     PUT /api/files/<id>/
+#     DELETE /api/files/<id>/

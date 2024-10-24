@@ -22,7 +22,7 @@ from rest_framework.routers import DefaultRouter
 from app.views import *
 
 router=DefaultRouter()
-router.register(r'files',FileViewSet,basename='file')
+router.register(r'files',FileViewSet,basename='files')
 router.register(r'users',UserViewSet,basename='user')
 
 
@@ -30,3 +30,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include(router.urls)),
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+print(urlpatterns)

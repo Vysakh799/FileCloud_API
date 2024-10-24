@@ -5,7 +5,8 @@ from django.contrib.auth.hashers import check_password
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model=Files
-        fields='__all__'
+        fields = ['id', 'uploaded_file', 'uploaded_at']  # Exclude 'user' from this list
+        read_only_fields = ['user']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
