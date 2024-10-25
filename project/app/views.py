@@ -38,7 +38,7 @@ class UserViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['get'])
     def me(self, request):
         user = request.user
-        print(user)
+        # print(user)
         return Response({
             'username': user.username,
             'email': user.email,
